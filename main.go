@@ -26,8 +26,11 @@ type Config struct {
 		CryptoDBPath string `toml:"crypto_db_path"`
 	}
 	LLM struct {
-		Model         string `toml:"model"`
-		DefaultPrompt string `toml:"default_prompt"`
+		Model         string  `toml:"model"`
+		DefaultPrompt string  `toml:"default_prompt"`
+		Temperature   float64 `toml:"temperature"`
+		TopK          int     `toml:"top_k"`
+		TopP          float64 `toml:"top_p"`
 	}
 }
 
@@ -250,7 +253,7 @@ func processMessage(ctx context.Context, client *mautrix.Client, ev *event.Event
 	conversationLock.Unlock()
 
 	// Query Ollama with the full conversation
-	response, err := queryOllama(body, state.conversation, state.systemPrompt)
+	response, err := queryOllama(state.conversation, state.systemPrompt, config.LLM.Temperature, config.LLM.TopK, config.LLM.TopP)
 	if err != nil {
 		log.Printf("Failed to query Ollama: %v", err)
 		client.SendText(ctx, ev.RoomID, "Sorry, something went wrong.")
@@ -259,7 +262,7 @@ func processMessage(ctx context.Context, client *mautrix.Client, ev *event.Event
 
 	// Add the LLM response to the conversation history
 	conversationLock.Lock()
-	state.conversation = append(state.conversation, OllamaMessage{Role: "you", Content: response})
+	state.conversation = append(state.conversation, OllamaMessage{Role: "assistant", Content: response})
 	conversationLock.Unlock()
 
 	// Send the LLM's response to the Matrix room

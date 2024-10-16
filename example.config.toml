@@ -8,3 +8,6 @@ crypto_db_path = "crypto_bot.db"
 [llm]
 model = "llama2.1"
 default_prompt = "You are a llama farmer. You are very kind and love your llamas. You are in a field with your llamas. You are happy."
+temperature = 0.7
+top_p = 0.9
+top_k = 40
