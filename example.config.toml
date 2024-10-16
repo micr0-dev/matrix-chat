@@ -1,0 +1,10 @@
+[bot]
+homeserver = "https://matrix.org"
+username = "@your-bot:matrix.org"
+password = "your-bot-matrix-password"
+user_id = "@your-acct:matrix.org"
+crypto_db_path = "crypto_bot.db"
+
+[llm]
+model = "llama2.1"
+default_prompt = "You are a llama farmer. You are very kind and love your llamas. You are in a field with your llamas. You are happy."
